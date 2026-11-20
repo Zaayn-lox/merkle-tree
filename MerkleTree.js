@@ -68,8 +68,15 @@ class MerkleTree {
 
 
 function verifyProof(proof, nodeHash, rootHash) {
-    // TODO Verify proof chain
-}
+    let currentHash = nodeHash;
 
+    for (const node of proof) {
+        currentHash = node.left
+            ? concatHashes(node.hash, currentHash)
+            : concatHashes(currentHash, node.hash);
+    }
+
+    return currentHash === rootHash;
+}
 
 module.exports = {MerkleTree, verifyProof }

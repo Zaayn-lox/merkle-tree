@@ -21,19 +21,31 @@ class Block {
 
 class Blockchain {
     constructor() {
-        
-        this.chain = [
-             /* TODO 1: Create the genesis block here */ 
-            ];
+        this.chain = [new Block("Genesis Block")];
     }
 
-    addBlock(block){
-        // TODO 2 Compute block.previousHash = previousBlock.toHash()
-        this.chain.push(block)
+    addBlock(block) {
+        const previousBlock = this.chain[this.chain.length - 1];
+        block.previousHash = previousBlock.toHash();
+        this.chain.push(block);
     }
 
-    isValid(){
-        // TODO 3 Check every block previous hash
+    isValid() {
+        for (let i = 1; i < this.chain.length; i++) {
+            const block = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+            const expectedHash = previousBlock.toHash();
+
+            if (
+                !block.previousHash ||
+                !Buffer.from(block.previousHash).equals(
+                    Buffer.from(expectedHash)
+                )
+            ) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
